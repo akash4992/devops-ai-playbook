@@ -13,6 +13,16 @@ spec:
       labels:
         app: product-service
     spec:
+      initContainers:
+        - name: wait-for-db
+          image: postgres:15-alpine
+          command: ['sh', '-c', 'until psql $DATABASE_URL -c "SELECT 1" > /dev/null 2>&1; do echo "Waiting for products_db..."; sleep 3; done']
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: boutique-secrets
+                  key: PRODUCTS_DB_URL
       containers:
         - name: product-service
           image: 522167229143.dkr.ecr.us-east-1.amazonaws.com/product-service:3a1e13b85d2cc0a24b8a32f53638f5e60d48ca9f

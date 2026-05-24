@@ -155,4 +155,10 @@ resource "aws_eks_addon" "ebs_csi" {
   depends_on = [
     aws_iam_role_policy_attachment.ebs_csi_irsa_policy
   ]
+
+  timeouts {
+    create = "35m"
+    update = "35m"
+    delete = "35m"
+  }
 }
