@@ -109,12 +109,26 @@ resource "aws_eks_node_group" "node_group" {
     Terraform   = "true"
   }
 
+  launch_template {
+    name    = aws_launch_template.node_group.name
+    version = aws_launch_template.node_group.latest_version
+  }
 
   depends_on = [
     aws_iam_role_policy_attachment.worker_node_policy,
     aws_iam_role_policy_attachment.cni_policy,
     aws_iam_role_policy_attachment.ecr_policy
   ]
+}
+
+resource "aws_launch_template" "node_group" {
+  name_prefix = "${var.cluster_name}-node-"
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 2
+  }
 }
 
 # EBS Volume and policies for EKS Node Group

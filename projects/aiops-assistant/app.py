@@ -30,7 +30,7 @@ AGENT_ALIAS_ID = os.getenv("BEDROCK_AGENT_ALIAS_ID")
 
 # --- Page Config ---
 st.set_page_config(
-    page_title="Kira — AIOps Assistant",
+    page_title="Sora — AIOps Assistant",
     page_icon="🔍",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -42,18 +42,18 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;700&display=swap');
 
     .stApp {
-        background-color: #0a0e14;
-        color: #c5c8c6;
+        background-color: #f5f7fa;
+        color: #1a1f2e;
     }
 
     .main-header {
         padding: 1.5rem 0 1rem 0;
-        border-bottom: 1px solid #1a1f2e;
+        border-bottom: 2px solid #e2e8f0;
         margin-bottom: 1.5rem;
     }
     .main-header h1 {
         font-family: 'JetBrains Mono', monospace;
-        color: #22d3ee;
+        color: #0284c7;
         font-size: 1.6rem;
         font-weight: 700;
         margin: 0;
@@ -61,7 +61,7 @@ st.markdown("""
     }
     .main-header p {
         font-family: 'DM Sans', sans-serif;
-        color: #5a6270;
+        color: #64748b;
         font-size: 0.85rem;
         margin: 0.3rem 0 0 0;
     }
@@ -71,19 +71,20 @@ st.markdown("""
         align-items: center;
         gap: 0.5rem;
         padding: 0.5rem 1rem;
-        background: #0d1117;
-        border: 1px solid #1a1f2e;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
         border-radius: 6px;
         margin-bottom: 1rem;
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.75rem;
+        color: #1a1f2e;
     }
     .status-dot {
         width: 8px;
         height: 8px;
-        background: #22d3ee;
+        background: #0284c7;
         border-radius: 50%;
-        box-shadow: 0 0 6px #22d3ee;
+        box-shadow: 0 0 6px #0284c7;
         animation: pulse 2s infinite;
     }
     @keyframes pulse {
@@ -100,41 +101,48 @@ st.markdown("""
     }
 
     .stChatMessage {
-        background: #0d1117 !important;
-        border: 1px solid #1a1f2e !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
         border-radius: 8px !important;
         font-family: 'DM Sans', sans-serif !important;
+        color: #1a1f2e !important;
     }
 
     [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
-        background: #111820 !important;
-        border-left: 3px solid #22d3ee !important;
+        background: #eff6ff !important;
+        border-left: 3px solid #0284c7 !important;
     }
 
     [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {
-        background: #0d1117 !important;
+        background: #fff7ed !important;
         border-left: 3px solid #f97316 !important;
     }
 
     .stChatInput textarea {
         font-family: 'DM Sans', sans-serif !important;
-        background: #0d1117 !important;
-        color: #c5c8c6 !important;
+        background: #ffffff !important;
+        color: #1a1f2e !important;
+        border: 1px solid #cbd5e1 !important;
+        font-size: 0.95rem !important;
+    }
+
+    .stChatInput textarea::placeholder {
+        color: #94a3b8 !important;
     }
 
     [data-testid="stSidebar"] {
-        background: #0d1117;
-        border-right: 1px solid #1a1f2e;
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
     }
 
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0a0e14; }
-    ::-webkit-scrollbar-thumb { background: #1a1f2e; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: #f5f7fa; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 
     .stButton > button {
-        background: #111820 !important;
-        border: 1px solid #1a1f2e !important;
-        color: #8b95a5 !important;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #475569 !important;
         font-family: 'JetBrains Mono', monospace !important;
         font-size: 0.75rem !important;
         padding: 0.4rem 0.8rem !important;
@@ -142,9 +150,13 @@ st.markdown("""
         transition: all 0.2s !important;
     }
     .stButton > button:hover {
-        border-color: #22d3ee !important;
-        color: #22d3ee !important;
-        background: #0d1117 !important;
+        border-color: #0284c7 !important;
+        color: #0284c7 !important;
+        background: #eff6ff !important;
+    }
+
+    p, li, span, div {
+        color: #1a1f2e;
     }
 
     #MainMenu { visibility: hidden; }
@@ -206,7 +218,7 @@ def invoke_agent(prompt: str) -> str:
 # --- Header ---
 st.markdown("""
 <div class="main-header">
-    <h1>⚡ KIRA</h1>
+    <h1>⚡ SORA</h1>
     <p>AIOps Assistant — Root Cause Analysis Engine</p>
 </div>
 """, unsafe_allow_html=True)
@@ -237,13 +249,13 @@ BEDROCK_AGENT_ALIAS_ID=TSTALIASID
 st.markdown(f"""
 <div class="status-bar">
     <div class="status-dot"></div>
-    <span style="color: #22d3ee;">ONLINE</span>
-    <span style="color: #2a3040;">|</span>
-    <span style="color: #5a6270;">Session: {st.session_state.session_id[:8]}</span>
-    <span style="color: #2a3040;">|</span>
-    <span style="color: #5a6270;">Region: {AWS_REGION}</span>
-    <span style="color: #2a3040;">|</span>
-    <span style="color: #5a6270;">Agent: {AGENT_ID}</span>
+    <span style="color: #0284c7;">ONLINE</span>
+    <span style="color: #cbd5e1;">|</span>
+    <span style="color: #64748b;">Session: {st.session_state.session_id[:8]}</span>
+    <span style="color: #cbd5e1;">|</span>
+    <span style="color: #64748b;">Region: {AWS_REGION}</span>
+    <span style="color: #cbd5e1;">|</span>
+    <span style="color: #64748b;">Agent: {AGENT_ID}</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -289,7 +301,7 @@ if prompt:
 
     # Get agent response
     with st.chat_message("assistant"):
-        with st.spinner("🔍 Kira is investigating..."):
+        with st.spinner("🔍 Sora is investigating..."):
             response = invoke_agent(prompt)
         st.markdown(response)
 
@@ -300,8 +312,8 @@ if prompt:
 with st.sidebar:
     st.markdown("""
     <div style="font-family: 'JetBrains Mono', monospace; padding: 1rem 0;">
-        <h3 style="color: #22d3ee; font-size: 1rem;">⚡ KIRA</h3>
-        <p style="color: #5a6270; font-size: 0.8rem;">AIOps Assistant v1.0</p>
+        <h3 style="color: #0284c7; font-size: 1rem;">⚡ SORA</h3>
+        <p style="color: #64748b; font-size: 0.8rem;">AIOps Assistant v1.0</p>
     </div>
     """, unsafe_allow_html=True)
 
